@@ -1,38 +1,37 @@
 $(document).ready(function() {
-  Stripe.setPublishableKey($('meta[name="stripe-key"]').attr('content'));
-  // Watch for a form submission:
-  $("#form-submit-btn").click(function(event) {
-    event.preventDefault();
-    $('input[type=submit]').prop('disabled', true);
-    var error = false;
-    var ccNum = $('#card_number').val(),
-        cvcNum = $('#card_code').val(),
-        expMonth = $('#card_month').val(),
-        expYear = $('#card_year').val();
-        
-    if (!error) {
-      // Get the Stripe token:
-      Stripe.createToken({
-        number: ccNum,
-        cvc: cvcNum,
-        exp_month: expMonth,
-        exp_year: expYear
-      }, stripeResponseHandler);
+   var stripe = Stripe($('meta[name="stripe-key"]').attr('content'));
+   console.log(stripe);
+   var elements = stripe.elements();
+   console.log(elements);
+   var card = elements.create('card');
+   card.mount('#card-element');
+   console.log(card);
+   // Watch for a form submission
+   document.querySelector('form').addEventListener('submit', function(event) {
+       event.preventDefault();
+       console.log("prevented default!");
+       stripe.createToken(card).then(function(result) {
+         if (result.error) {
+            // Inform the user if there was an error
+            var errorElement = document.getElementById('card-errors');
+            errorElement.textContent = result.error.message;
+         } else {
+            // Send the token to your server
+            stripeTokenHandler(result.token);
+         }
+      });
+   }); // form-submission
+   
+   function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('new_user');
+      var hiddenInput = document.createElement('input');
+      hiddenInput.setAttribute('type', 'hidden');
+      hiddenInput.setAttribute('name', 'stripe_customer_token');
+      hiddenInput.setAttribute('value', token.id);
+      form.appendChild(hiddenInput);
+    
+      // Submit the form
+      form.submit();
     }
-    return false;
-  }); // form submission
-  
-  function stripeResponseHandler(status, response) {
-    // Get a reference to the form:
-    var f = $("#new_user");
-    
-    // Get the token from the response
-    var token = response.id;
-    
-    // Add the token to the form:
-    f.append('<input type="hidden" name="user[stripe_card_token]" value"' + token + '" />');
-    
-    // Submit the form:
-    f.get(0).submit();
-  }
 });
