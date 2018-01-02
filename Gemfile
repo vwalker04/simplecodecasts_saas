@@ -6,6 +6,8 @@ source 'https://rubygems.org'
   gem 'stripe', '1.16.1'
 # Use figaro to hide secret keys and sensitive info
   gem 'figaro', '1.0.0'
+# Use paperclip for image uploads
+  gem 'paperclip', '4.2.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.0'
