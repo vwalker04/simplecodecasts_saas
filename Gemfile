@@ -1,5 +1,11 @@
 source 'https://rubygems.org'
 
+# Use devise for user auth  
+  gem 'devise', '3.4.1'
+# Use stripe for handling payments
+  gem 'stripe', '1.16.1'
+# Use figaro to hide secret keys and sensitive info
+  gem 'figaro', '1.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.0'
@@ -55,11 +61,6 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', group: :development
   
-# Use devise for user auth  
-  gem 'devise', '3.4.1'
-# Use stripe for handling payments
-  gem 'stripe', '1.16.1'
-# Use figaro to hide secret keys and sensitive info
-  gem 'figaro', '1.0.0'
+
 end
 
